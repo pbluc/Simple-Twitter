@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,6 +36,8 @@ public class TimelineActivity extends AppCompatActivity {
     TwitterClient client;
     RecyclerView rvTweets;
     Button btnLogout;
+    private SwipeRefreshLayout swipeContainer;
+
     List<Tweet> tweets;
     TweetsAdapter adapter;
 
@@ -46,6 +49,8 @@ public class TimelineActivity extends AppCompatActivity {
         client = TwitterApp.getRestClient(this);
 
         btnLogout = findViewById(R.id.btnLogout);
+        // Lookup the swipe container
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         // Find the recycler view
         rvTweets = findViewById(R.id.rvTweets);
 
@@ -58,6 +63,40 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets.setAdapter(adapter);
 
         populateHomeTimeline();
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Code to refresh the list here
+                // Make sure to call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully
+                fetchTimelineAsync(0);
+            }
+        });
+    }
+
+    public void fetchTimelineAsync(int page) {
+        // Send the network request to fetch the updated data
+        // 'client' here is an instance of Android Async HTTP
+        // getHomeTimeline is an example endpoint.
+        client.getHomeTimeline(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                // Clear out old items before appending in the new ones
+                adapter.clear();
+                // the data has come back, add new items to the adapter
+                adapter.addAll(tweets);
+                // Call setRefreshing(false) to signal refresh has finished
+                swipeContainer.setRefreshing(false);
+                populateHomeTimeline();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "Fetch timeline error: " + response);
+            }
+        });
     }
 
     private void populateHomeTimeline() {
