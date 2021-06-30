@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -25,6 +26,7 @@ public class ComposeActivity extends AppCompatActivity {
 
     EditText etCompose;
     Button btnTweet;
+    ProgressBar pb;
 
     TwitterClient client;
 
@@ -37,6 +39,7 @@ public class ComposeActivity extends AppCompatActivity {
 
         etCompose = findViewById(R.id.etCompose);
         btnTweet = findViewById(R.id.btnTweet);
+        pb = findViewById(R.id.pbLoading);
 
         // Set click listener on button
         btnTweet.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +60,7 @@ public class ComposeActivity extends AppCompatActivity {
                 client.publishTweet(tweetContent, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
+                        pb.setVisibility(View.VISIBLE);
                         Log.i(TAG, "onSucess to publish tweet");
                         try {
                             Tweet tweet = Tweet.fromJson(json.jsonObject);
@@ -65,6 +69,7 @@ public class ComposeActivity extends AppCompatActivity {
                             intent.putExtra("tweet", Parcels.wrap(tweet));
                             // set result code and bundle data for response
                             setResult(RESULT_OK, intent);
+                            pb.setVisibility(View.INVISIBLE);
                             // closes the activity, pass data to parent
                             finish();
                         } catch (JSONException e) {

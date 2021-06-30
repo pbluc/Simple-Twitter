@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.adapters.TweetsAdapter;
@@ -30,13 +31,14 @@ import okhttp3.Headers;
 
 public class TimelineActivity extends AppCompatActivity {
 
-    public static final String TAG = "TimelineACtivity";
+    public static final String TAG = "TimelineActivity";
     private final int REQUEST_CODE = 20;
 
     TwitterClient client;
     RecyclerView rvTweets;
     Button btnLogout;
     private SwipeRefreshLayout swipeContainer;
+    ProgressBar pb;
 
     List<Tweet> tweets;
     TweetsAdapter adapter;
@@ -49,6 +51,7 @@ public class TimelineActivity extends AppCompatActivity {
         client = TwitterApp.getRestClient(this);
 
         btnLogout = findViewById(R.id.btnLogout);
+        pb = findViewById(R.id.pbLoading);
         // Lookup the swipe container
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         // Find the recycler view
@@ -83,13 +86,17 @@ public class TimelineActivity extends AppCompatActivity {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
-                // Clear out old items before appending in the new ones
-                adapter.clear();
-                // the data has come back, add new items to the adapter
-                adapter.addAll(tweets);
+                try {
+                    // Clear out old items before appending in the new ones
+                    adapter.clear();
+                    // the data has come back, add new items to the adapter
+                    adapter.addAll(Tweet.fromJsonArray(json.jsonArray));
+                    adapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 // Call setRefreshing(false) to signal refresh has finished
                 swipeContainer.setRefreshing(false);
-                populateHomeTimeline();
             }
 
             @Override
@@ -103,6 +110,7 @@ public class TimelineActivity extends AppCompatActivity {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
+                pb.setVisibility(View.VISIBLE);
                 Log.i(TAG, "onSuccess! " + json.toString());
                 JSONArray jsonArray = json.jsonArray;
                 try {
@@ -112,6 +120,7 @@ public class TimelineActivity extends AppCompatActivity {
                     Log.e(TAG, "Json exception", e);
                     e.printStackTrace();
                 }
+                pb.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -157,7 +166,9 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
     public void logoutToRest(View view) {
+        pb.setVisibility(View.VISIBLE);
         client.clearAccessToken(); // forget who's logged in
+        pb.setVisibility(View.INVISIBLE);
         finish(); // navigate backwards to Login screen
     }
 }
