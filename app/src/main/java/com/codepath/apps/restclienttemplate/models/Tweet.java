@@ -26,7 +26,10 @@ public class Tweet {
     public String createdAt;
     public User user;
     public String imgMedia;
-    public int replyCount;
+    public String statusId;
+    public Integer retweetCount;
+    public Integer likeCount;
+
 
     public Tweet() {
     }
@@ -36,13 +39,9 @@ public class Tweet {
         tweet.body = jsonObject.getString("text");
         tweet.createdAt = tweet.getRelativeTimeAgo(jsonObject.getString("created_at"));
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
-        if(jsonObject.has("reply_count")) {
-            tweet.replyCount = jsonObject.getInt("reply_count");
-            Log.i("Reply Showing", String.valueOf(tweet.replyCount));
-        } else {
-            tweet.replyCount = 0;
-            Log.i("Reply Here", String.valueOf(tweet.replyCount));
-        }
+        tweet.statusId = jsonObject.getString("id_str");
+        tweet.retweetCount = jsonObject.getInt("retweet_count");
+        tweet.likeCount = (Integer) jsonObject.get("favorite_count");
 
        if(jsonObject.getJSONObject("entities").has("media")) {
             JSONArray media = jsonObject.getJSONObject("entities").getJSONArray("media");
@@ -52,6 +51,7 @@ public class Tweet {
         } else {
             tweet.imgMedia = "";
         }
+
         return tweet;
     }
 
@@ -94,6 +94,27 @@ public class Tweet {
         }
 
         return "";
+    }
+
+    public static String[] getTimeAndDatePosted(String rawJsonDate) {
+        String[] timeAndDate = new String[2];
+        timeAndDate[0] = rawJsonDate.substring(4, 11) + rawJsonDate.substring(rawJsonDate.length()-4);
+        //String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+
+        String time = rawJsonDate.substring(11,16);
+        if(Integer.valueOf(time.substring(0,2)) >= 12 && Integer.valueOf(time.substring(0,2)) <= 23) {
+            if(Integer.valueOf(time.substring(0,2)) >12) {
+                time = String.valueOf(Integer.valueOf(time.substring(0,2)) - 12) + time.substring(2);
+            }
+            time += " PM";
+        } else if(Integer.valueOf(time.substring(0,2)) >= 1 && Integer.valueOf(time.substring(0,2)) <= 11) {
+            time += " AM";
+        } else {
+            time = "12" + time.substring(2) + "AM";
+        }
+
+        timeAndDate[1] = time;
+        return timeAndDate;
     }
 
 }

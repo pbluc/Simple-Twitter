@@ -77,25 +77,36 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
         ImageView ivProfileImage;
         ImageView ivImgMedia;
+        ImageView ivRetweet;
+        ImageView ivFavorite;
+        ImageView ivReplyTo;
+
         TextView tvBody;
         TextView tvScreenName;
         TextView tvCreatedAt;
-        ImageView ivReplyTo;
-        TextView tvReplyCount;
+        TextView tvRetweetCount;
+        TextView tvFavoriteCount;
+
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
+            ivImgMedia = itemView.findViewById(R.id.ivImgMedia);
+            ivRetweet = itemView.findViewById(R.id.ivRetweet);
+            ivFavorite = itemView.findViewById(R.id.ivFavorite);
+            ivReplyTo = itemView.findViewById(R.id.ivReplyTo);
+
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
-            ivImgMedia = itemView.findViewById(R.id.ivImgMedia);
-            ivReplyTo = itemView.findViewById(R.id.ivReplyTo);
-            tvReplyCount = itemView.findViewById(R.id.tvReplyCount);
+            tvRetweetCount = itemView.findViewById(R.id.tvRetweetCount);
+            tvFavoriteCount = itemView.findViewById(R.id.tvFavoriteCount);
 
             itemView.setOnClickListener(this);
 
+            ivRetweet.setOnClickListener(this);
             ivReplyTo.setOnClickListener(this);
+            ivFavorite.setOnClickListener(this);
         }
 
         public void bind(Tweet tweet) {
@@ -109,10 +120,16 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 ivImgMedia.setVisibility(View.GONE);
             }
 
-            if(tweet.replyCount != 0) {
-                tvReplyCount.setText(String.valueOf(tweet.replyCount));
+            if(tweet.retweetCount != 0) {
+                tvRetweetCount.setText(String.valueOf(tweet.retweetCount));
             } else {
-                tvReplyCount.setText("");
+                tvRetweetCount.setText("");
+            }
+
+            if(tweet.likeCount != 0) {
+                tvFavoriteCount.setText(String.valueOf(tweet.likeCount));
+            } else {
+                tvFavoriteCount.setText("");
             }
 
             tvCreatedAt.setText(tweet.createdAt);
@@ -125,6 +142,12 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 case R.id.ivReplyTo:
                     mOnClickListener.onReplyTo(position);
                     break;
+                case R.id.ivRetweet:
+                    mOnClickListener.onRetweet(position);
+                    break;
+                case R.id.ivFavorite:
+                    mOnClickListener.onFavorite(position);
+                    break;
                 default:
                     mOnClickListener.onListItemClick(position);
                     break;
@@ -136,6 +159,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     public interface ListItemClickListener {
         void onListItemClick(int position);
         void onReplyTo(int position);
+        void onRetweet(int position);
+        void onFavorite(int position);
     }
 
 }

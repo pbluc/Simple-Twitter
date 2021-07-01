@@ -61,20 +61,54 @@
         android:layout_height="15dp"
         android:layout_below="@id/ivImgMedia"
         android:layout_toEndOf="@id/ivProfileImage"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="30dp"
         android:layout_marginTop="13dp"
         android:clickable="true"
         android:src="@drawable/ic_reply_to"/>
 
+    <ImageView
+        android:id="@+id/ivRetweet"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/ivImgMedia"
+        android:layout_toEndOf="@id/ivReplyTo"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:src="@drawable/ic_retweet_post"/>
+
     <TextView
-        android:id="@+id/tvReplyCount"
+        android:id="@+id/tvRetweetCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/ivImgMedia"
-        android:layout_toEndOf="@id/ivReplyTo"
-        android:layout_marginLeft="10dp"
+        android:layout_toEndOf="@id/ivRetweet"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:visibility="visible"
         android:text="57"/>
+
+    <ImageView
+        android:id="@+id/ivFavorite"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/ivImgMedia"
+        android:layout_toStartOf="@id/tvFavoriteCount"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:src="@drawable/ic_favorite_tweet"/>
+
+    <TextView
+        android:id="@+id/tvFavoriteCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivImgMedia"
+        android:layout_alignEnd="@id/tvCreatedAt"
+        android:layout_marginRight="70dp"
+        android:layout_marginTop="10dp"
+        android:visibility="visible"
+        android:text="57"/>
+
 
 </RelativeLayout>

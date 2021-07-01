@@ -81,16 +81,68 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
 
     @Override
     public void onListItemClick(int position) {
-        //Intent intent = new Intent(this, DetailsActivity.class);
-        //intent.putExtra("Selected Tweet", Parcels.wrap(tweets.get(position)));
-        //startActivity(intent);
+        Intent intent = new Intent(this, DetailsActivity.class);
+        Log.i(TAG, tweets.get(position).body);
+        intent.putExtra("selected tweet", Parcels.wrap(tweets.get(position)));
+        startActivity(intent);
     }
 
     @Override
     public void onReplyTo(int position) {
-        Intent i = new Intent(this, ComposeActivity.class);
-        i.putExtra("tweet user", tweets.get(position).user.screenName);
-        startActivity(i);
+        Intent intent = new Intent(this, ComposeActivity.class);
+        intent.putExtra("tweet user", tweets.get(position).user.screenName);
+        intent.putExtra("tweet status id", tweets.get(position).statusId);
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    @Override
+    public void onFavorite(final int position) {
+        client.favoriteTweet(tweets.get(position).statusId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                try {
+                    Log.i(TAG, "On Success! Favorited: " + json.toString());
+                    Tweet tweet = Tweet.fromJson(json.jsonObject);
+                    // Update the RV with the tweet
+                    // Modify data source of tweets
+                    tweets.set(position, tweet);
+                    // Update the adapter
+                    adapter.notifyItemChanged(position);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "Favorite tweet post error: " + response);
+            }
+        });
+    }
+
+    @Override
+    public void onRetweet(int position) {
+        client.retweetPost(tweets.get(position).statusId, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                try {
+                    Tweet tweet = Tweet.fromJson(json.jsonObject);
+                    // Update the RV with the tweet
+                    // Modify data source of tweets
+                    tweets.add(0, tweet);
+                    // Update the adapter
+                    adapter.notifyItemInserted(0);
+                    rvTweets.smoothScrollToPosition(0);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "Retweet post error: " + response);
+            }
+        });
     }
 
     public void fetchTimelineAsync(int page) {

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DetailsActivity">
+
+    <ScrollView
+        android:id="@+id/scrollViewContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fillViewport="false">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/ivProfileImage"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="20dp"
+                />
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/ivProfileImage"
+                android:layout_marginTop="0dp"
+                android:textSize="18sp"
+                android:layout_toEndOf="@id/ivProfileImage"
+                android:text="Patricia Luc" />
+
+            <TextView
+                android:id="@+id/tvScreenName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvName"
+                android:layout_marginTop="5dp"
+                android:textSize="12sp"
+                android:layout_toEndOf="@id/ivProfileImage"
+                android:text="\@PatriciaLuc12" />
+
+            <TextView
+                android:id="@+id/tvBody"
+                android:layout_width="360dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvScreenName"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_alignStart="@+id/ivProfileImage"
+                android:textSize="26sp"
+                android:text="“To open a store like Target in an African-American neighborhood gave this area legitimacy,“ said the pastor of Mount Lebanon Baptist Church in Mondawmin. “When the store closed, it was like saying, ‘You are not worthy after all.’”" />
+
+            <ImageView
+                android:id="@+id/ivImgMedia"
+                android:layout_width="350dp"
+                android:layout_height="200dp"
+                android:layout_below="@id/tvBody"
+                android:layout_marginTop="15dp"
+                android:layout_alignStart="@id/ivProfileImage"
+                android:layout_alignEnd="@id/tvBody"/>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutContainer"
+                android:layout_below="@id/ivImgMedia"
+                android:layout_alignStart="@id/ivProfileImage"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvTimePosted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1:00 AM"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" · "/>
+
+                <TextView
+                    android:id="@+id/tvDatePosted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="01 Jul 21"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/secondLinearLayoutContainer"
+                android:layout_below="@id/linearLayoutContainer"
+                android:layout_alignStart="@id/ivProfileImage"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvRetweetCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" Retweets"/>
+
+                <TextView
+                    android:id="@+id/tvLikeCount"
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" Likes"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_below="@id/secondLinearLayoutContainer"
+                android:layout_alignStart="@id/secondLinearLayoutContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/ivReplyTo"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="13dp"
+                    android:clickable="true"
+                    android:src="@drawable/ic_reply_to"/>
+
+                <ImageView
+                    android:id="@+id/ivRetweet"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_below="@id/ivImgMedia"
+                    android:layout_toEndOf="@id/ivReplyTo"
+                    android:layout_marginLeft="120dp"
+                    android:layout_marginTop="10dp"
+                    android:clickable="true"
+                    android:src="@drawable/ic_retweet_post"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

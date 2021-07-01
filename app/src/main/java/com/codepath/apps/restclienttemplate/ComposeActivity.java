@@ -21,7 +21,7 @@ import okhttp3.Headers;
 
 public class ComposeActivity extends AppCompatActivity {
 
-    public static final String TAG = "ComposeACtivity";
+    public static final String TAG = "ComposeActivity";
     public static final int MAX_TWEET_LENGTH = 280;
 
     EditText etCompose;
@@ -31,6 +31,7 @@ public class ComposeActivity extends AppCompatActivity {
     TwitterClient client;
 
     String userReply;
+    String statusId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,17 +45,18 @@ public class ComposeActivity extends AppCompatActivity {
         pb = findViewById(R.id.pbLoading);
 
         if(getIntent().hasExtra("tweet user")) {
-            userReply = getIntent().getStringExtra("tweet user");
-            etCompose.setText("@" + userReply);
+            userReply = "@" + getIntent().getStringExtra("tweet user");
+            etCompose.setText(userReply);
         } else {
             userReply = "";
         }
+        statusId = getIntent().getStringExtra("tweet status id");
 
         // Set click listener on button
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String tweetContent = etCompose.getText().toString();
+                final String tweetContent = etCompose.getText().toString();
                 if(tweetContent.isEmpty()) {
                     Toast.makeText(ComposeActivity.this, "Sorry, your tweet cannot be empty", Toast.LENGTH_LONG).show();
                     return;
@@ -66,15 +68,15 @@ public class ComposeActivity extends AppCompatActivity {
                 }
 
                 if(!userReply.equals("")) {
-                    client.replyTweet(userReply, new JsonHttpResponseHandler() {
+                    client.replyTweet(tweetContent, statusId, new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Headers headers, JSON json) {
                             pb.setVisibility(View.VISIBLE);
-                            Log.i(TAG, "onSucess to publish tweet");
                             try {
-                                //Tweet tweet = Tweet.fromJson(json.jsonObject);
-                                //Log.i(TAG, "Published reply says: " + tweet);
+                                Tweet tweet = Tweet.fromJson(json.jsonObject);
                                 Intent intent = new Intent();
+                                intent.putExtra("tweet", Parcels.wrap(tweet));
+                                setResult(RESULT_OK, intent);
                                 pb.setVisibility(View.INVISIBLE);
                                 // closes the activity, pass data to parent
                                 finish();
@@ -98,7 +100,7 @@ public class ComposeActivity extends AppCompatActivity {
                             Log.i(TAG, "onSucess to publish tweet");
                             try {
                                 Tweet tweet = Tweet.fromJson(json.jsonObject);
-                                Log.i(TAG, "Published tweet says: " + tweet);
+                                //Log.i(TAG, "Published tweet says: " + tweet);
                                 Intent intent = new Intent();
                                 intent.putExtra("tweet", Parcels.wrap(tweet));
                                 // set result code and bundle data for response

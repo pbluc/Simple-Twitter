@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -68,11 +69,35 @@ public class TwitterClient extends OAuthBaseClient {
 		client.post(apiUrl, params, "", handler);
 	}
 
-	public void replyTweet(String inReplyToStatus, JsonHttpResponseHandler handler) {
+	public void replyTweet(String tweetContent, String inReplyToStatus, JsonHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/update.json");
 		RequestParams params = new RequestParams();
-		params.put("status", inReplyToStatus);
+		params.put("status", tweetContent);
+		params.put("in_reply_to_status_id", inReplyToStatus);
 		client.post(apiUrl, params, "", handler);
 	}
+
+	public void getFullTextTweet(String statusId, JsonHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/show.json?id=" + statusId);
+		RequestParams params = new RequestParams();
+		params.put("status", statusId);
+		params.put("tweet_mode", "extended");
+		client.get(apiUrl, params, handler);
+	}
+
+	public void retweetPost(String statusId, JsonHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/retweet/" + statusId + ".json");
+		RequestParams params = new RequestParams();
+		params.put("id", statusId);
+		client.post(apiUrl, params, "", handler);
+	}
+
+	public void favoriteTweet(String statusId, JsonHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("favorites/create.json?id=" + statusId);
+		RequestParams params = new RequestParams();
+		params.put("id", statusId);
+		client.post(apiUrl, params, "", handler);
+	}
+
 
 }
