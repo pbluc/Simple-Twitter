@@ -29,7 +29,7 @@ import java.util.List;
 
 import okhttp3.Headers;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity implements TweetsAdapter.ListItemClickListener {
 
     public static final String TAG = "TimelineActivity";
     private final int REQUEST_CODE = 20;
@@ -59,7 +59,7 @@ public class TimelineActivity extends AppCompatActivity {
 
         // Initialize list of tweets and adapter
         tweets = new ArrayList<>();
-        adapter = new TweetsAdapter(this, tweets);
+        adapter = new TweetsAdapter(this, tweets, this);
 
         // Recycler view setup: layout manager and the adapter
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
@@ -77,6 +77,20 @@ public class TimelineActivity extends AppCompatActivity {
                 fetchTimelineAsync(0);
             }
         });
+    }
+
+    @Override
+    public void onListItemClick(int position) {
+        //Intent intent = new Intent(this, DetailsActivity.class);
+        //intent.putExtra("Selected Tweet", Parcels.wrap(tweets.get(position)));
+        //startActivity(intent);
+    }
+
+    @Override
+    public void onReplyTo(int position) {
+        Intent i = new Intent(this, ComposeActivity.class);
+        i.putExtra("tweet user", tweets.get(position).user.screenName);
+        startActivity(i);
     }
 
     public void fetchTimelineAsync(int page) {

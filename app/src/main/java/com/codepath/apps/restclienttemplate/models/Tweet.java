@@ -26,6 +26,7 @@ public class Tweet {
     public String createdAt;
     public User user;
     public String imgMedia;
+    public int replyCount;
 
     public Tweet() {
     }
@@ -35,6 +36,14 @@ public class Tweet {
         tweet.body = jsonObject.getString("text");
         tweet.createdAt = tweet.getRelativeTimeAgo(jsonObject.getString("created_at"));
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
+        if(jsonObject.has("reply_count")) {
+            tweet.replyCount = jsonObject.getInt("reply_count");
+            Log.i("Reply Showing", String.valueOf(tweet.replyCount));
+        } else {
+            tweet.replyCount = 0;
+            Log.i("Reply Here", String.valueOf(tweet.replyCount));
+        }
+
        if(jsonObject.getJSONObject("entities").has("media")) {
             JSONArray media = jsonObject.getJSONObject("entities").getJSONArray("media");
             //Log.i("Tweet", media.toString());

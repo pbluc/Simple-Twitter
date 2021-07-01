@@ -28,10 +28,13 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     Context context;
     List<Tweet> tweets;
 
+    final private ListItemClickListener mOnClickListener;
+
     // Pass in the context and list of tweets
-    public TweetsAdapter(Context context, List<Tweet> tweets) {
+    public TweetsAdapter(Context context, List<Tweet> tweets, ListItemClickListener onClickListener) {
         this.context = context;
         this.tweets = tweets;
+        this.mOnClickListener = onClickListener;
     }
 
     @Override
@@ -70,26 +73,34 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     }
 
     // Define a viewholder
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView ivProfileImage;
         ImageView ivImgMedia;
         TextView tvBody;
-        TextView tvSCreenName;
+        TextView tvScreenName;
         TextView tvCreatedAt;
+        ImageView ivReplyTo;
+        TextView tvReplyCount;
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvBody = itemView.findViewById(R.id.tvBody);
-            tvSCreenName = itemView.findViewById(R.id.tvScreenName);
+            tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
             ivImgMedia = itemView.findViewById(R.id.ivImgMedia);
+            ivReplyTo = itemView.findViewById(R.id.ivReplyTo);
+            tvReplyCount = itemView.findViewById(R.id.tvReplyCount);
+
+            itemView.setOnClickListener(this);
+
+            ivReplyTo.setOnClickListener(this);
         }
 
         public void bind(Tweet tweet) {
             tvBody.setText(tweet.body);
-            tvSCreenName.setText(tweet.user.screenName);
+            tvScreenName.setText("@" + tweet.user.screenName);
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
             if(!tweet.imgMedia.equals("")) {
                 ivImgMedia.setVisibility(View.VISIBLE);
@@ -97,8 +108,34 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             } else {
                 ivImgMedia.setVisibility(View.GONE);
             }
+
+            if(tweet.replyCount != 0) {
+                tvReplyCount.setText(String.valueOf(tweet.replyCount));
+            } else {
+                tvReplyCount.setText("");
+            }
+
             tvCreatedAt.setText(tweet.createdAt);
         }
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            switch(view.getId()) {
+                case R.id.ivReplyTo:
+                    mOnClickListener.onReplyTo(position);
+                    break;
+                default:
+                    mOnClickListener.onListItemClick(position);
+                    break;
+
+            }
+        }
+    }
+
+    public interface ListItemClickListener {
+        void onListItemClick(int position);
+        void onReplyTo(int position);
     }
 
 }

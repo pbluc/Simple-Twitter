@@ -2,16 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:clickable="true">
 
     <ImageView
         android:id="@+id/ivProfileImage"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp" />
 
     <TextView
         android:id="@+id/tvScreenName"
@@ -21,7 +22,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="0dp"
         android:layout_toEndOf="@id/ivProfileImage"
-        android:text="PatriciaLuc12"/>
+        android:text="PatriciaLuc12" />
 
     <TextView
         android:id="@+id/tvBody"
@@ -31,28 +32,49 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="2dp"
         android:layout_toEndOf="@id/ivProfileImage"
-        android:text="This is my first tweet"/>
+        android:text="This is my first tweet" />
 
     <TextView
         android:id="@+id/tvCreatedAt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_marginRight="5dp"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
         android:text="5m"
-        android:textAlignment="center"/>
+        android:textAlignment="center" />
 
     <ImageView
         android:id="@+id/ivImgMedia"
         android:layout_width="350dp"
         android:layout_height="200dp"
         android:layout_below="@id/tvBody"
-        android:layout_toEndOf="@id/ivProfileImage"
-        android:layout_marginEnd="5dp"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_toEndOf="@id/ivProfileImage" />
 
+    <ImageView
+        android:id="@+id/ivReplyTo"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_below="@id/ivImgMedia"
+        android:layout_toEndOf="@id/ivProfileImage"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="13dp"
+        android:clickable="true"
+        android:src="@drawable/ic_reply_to"/>
+
+    <TextView
+        android:id="@+id/tvReplyCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivImgMedia"
+        android:layout_toEndOf="@id/ivReplyTo"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:visibility="visible"
+        android:text="57"/>
 
 </RelativeLayout>
