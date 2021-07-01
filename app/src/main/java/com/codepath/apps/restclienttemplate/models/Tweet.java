@@ -24,11 +24,12 @@ public class Tweet {
 
     public String body;
     public String createdAt;
-    public User user;
     public String imgMedia;
     public String statusId;
+    public User user;
     public Integer retweetCount;
     public Integer likeCount;
+    public Long numId;
 
 
     public Tweet() {
@@ -42,6 +43,7 @@ public class Tweet {
         tweet.statusId = jsonObject.getString("id_str");
         tweet.retweetCount = jsonObject.getInt("retweet_count");
         tweet.likeCount = (Integer) jsonObject.get("favorite_count");
+        tweet.numId = jsonObject.getLong("id");
 
        if(jsonObject.getJSONObject("entities").has("media")) {
             JSONArray media = jsonObject.getJSONObject("entities").getJSONArray("media");

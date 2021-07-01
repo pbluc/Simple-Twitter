@@ -53,6 +53,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_alignStart="@+id/ivProfileImage"
                 android:textSize="26sp"
+                android:autoLink="all"
                 android:text="“To open a store like Target in an African-American neighborhood gave this area legitimacy,“ said the pastor of Mount Lebanon Baptist Church in Mondawmin. “When the store closed, it was like saying, ‘You are not worthy after all.’”" />
 
             <ImageView

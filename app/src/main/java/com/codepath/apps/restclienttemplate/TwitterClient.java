@@ -55,7 +55,7 @@ public class TwitterClient extends OAuthBaseClient {
 
 	// Define the endpoints which we want to retrieve data from or send data to within our client
 	public void getHomeTimeline(JsonHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("statuses/home_timeline.json");
+		String apiUrl = getApiUrl("/statuses/home_timeline.json");
 		RequestParams params = new RequestParams();
 		params.put("count", 25);
 		params.put("since_id", 1);
@@ -63,14 +63,14 @@ public class TwitterClient extends OAuthBaseClient {
 	}
 
 	public void publishTweet(String tweetContent, JsonHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("statuses/update.json");
+		String apiUrl = getApiUrl("/statuses/update.json");
 		RequestParams params = new RequestParams();
 		params.put("status", tweetContent);
 		client.post(apiUrl, params, "", handler);
 	}
 
 	public void replyTweet(String tweetContent, String inReplyToStatus, JsonHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("statuses/update.json");
+		String apiUrl = getApiUrl("/statuses/update.json");
 		RequestParams params = new RequestParams();
 		params.put("status", tweetContent);
 		params.put("in_reply_to_status_id", inReplyToStatus);
@@ -78,7 +78,7 @@ public class TwitterClient extends OAuthBaseClient {
 	}
 
 	public void getFullTextTweet(String statusId, JsonHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("statuses/show.json?id=" + statusId);
+		String apiUrl = getApiUrl("/statuses/show.json?id=" + statusId);
 		RequestParams params = new RequestParams();
 		params.put("status", statusId);
 		params.put("tweet_mode", "extended");
@@ -86,14 +86,14 @@ public class TwitterClient extends OAuthBaseClient {
 	}
 
 	public void retweetPost(String statusId, JsonHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("statuses/retweet/" + statusId + ".json");
+		String apiUrl = getApiUrl("/statuses/retweet/" + statusId + ".json");
 		RequestParams params = new RequestParams();
 		params.put("id", statusId);
 		client.post(apiUrl, params, "", handler);
 	}
 
-	public void favoriteTweet(String statusId, JsonHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("favorites/create.json?id=" + statusId);
+	public void favoriteTweet(Long statusId, JsonHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("/favorites/create.json?id=" + statusId);
 		RequestParams params = new RequestParams();
 		params.put("id", statusId);
 		client.post(apiUrl, params, "", handler);
