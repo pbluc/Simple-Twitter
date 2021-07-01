@@ -132,6 +132,12 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 tvFavoriteCount.setText("");
             }
 
+            if(tweet.favorited) {
+                ivFavorite.setImageResource(R.drawable.ic_unfavorite_tweet);
+            } else {
+                ivFavorite.setImageResource(R.drawable.ic_favorite_tweet);
+            }
+
             tvCreatedAt.setText(tweet.createdAt);
         }
 

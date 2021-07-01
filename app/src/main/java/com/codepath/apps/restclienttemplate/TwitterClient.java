@@ -62,6 +62,14 @@ public class TwitterClient extends OAuthBaseClient {
 		client.get(apiUrl, params, handler);
 	}
 
+	public void getLatestTweet(JsonHttpResponseHandler handler, long maxId) {
+		String apiUrl = getApiUrl("/statuses/home_timeline.json");
+		RequestParams params = new RequestParams();
+		params.put("count", 25);
+		params.put("max_id", maxId);
+		client.get(apiUrl, params, handler);
+	}
+
 	public void publishTweet(String tweetContent, JsonHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("/statuses/update.json");
 		RequestParams params = new RequestParams();
@@ -93,7 +101,14 @@ public class TwitterClient extends OAuthBaseClient {
 	}
 
 	public void favoriteTweet(Long statusId, JsonHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("/favorites/create.json?id=" + statusId);
+		String apiUrl = getApiUrl("/favorites/create.json");
+		RequestParams params = new RequestParams();
+		params.put("id", statusId);
+		client.post(apiUrl, params, "", handler);
+	}
+
+	public void unfavoriteTweet(Long statusId, JsonHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("/favorites/destroy.json");
 		RequestParams params = new RequestParams();
 		params.put("id", statusId);
 		client.post(apiUrl, params, "", handler);

@@ -45,8 +45,6 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
 
     private EndlessRecyclerViewScrollListener scrollListener;
 
-    Long lowestTweetIdSeen;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +103,25 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         //  --> Deserialize and construct new model objects from the API response
         //  --> Append the new data objects to the existing set of items inside the array of items
         //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
+        client.getLatestTweet(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.i(TAG, "On Success! :" + json.toString());
+                try {
+                    JSONArray jsonArray = json.jsonArray;
+                    tweets.addAll(Tweet.fromJsonArray(jsonArray));
+                    adapter.notifyDataSetChanged();
+                    scrollListener.resetState();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "Loading next data error: " + response);
+            }
+        }, tweets.get(tweets.size() - 1).numId);
     }
 
     @Override
@@ -125,54 +142,81 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
 
     @Override
     public void onFavorite(final int position) {
-        client.favoriteTweet(tweets.get(position).numId, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                try {
-                    Log.i(TAG, "On Success! Favorited: " + json.toString());
-                    Tweet tweet = Tweet.fromJson(json.jsonObject);
-                    // Update the RV with the tweet
-                    // Modify data source of tweets
-                    tweets.set(position, tweet);
-                    // Update the adapter
-                    adapter.notifyItemChanged(position);
-                    scrollListener.resetState();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        if(!tweets.get(position).favorited) {
+            client.favoriteTweet(tweets.get(position).numId, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Headers headers, JSON json) {
+                    try {
+                        Log.i(TAG, "On Success! Favorited: " + json.toString());
+                        Tweet tweet = Tweet.fromJson(json.jsonObject);
+                        // Update the RV with the tweet
+                        // Modify data source of tweets
+                        tweets.set(position, tweet);
+                        // Update the adapter
+                        adapter.notifyItemChanged(position);
+                        scrollListener.resetState();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.e(TAG, "Favorite tweet post error: " + response);
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                    Log.e(TAG, "Favorite tweet post error: " + response);
+                }
+            });
+        } else {
+            client.unfavoriteTweet(tweets.get(position).numId, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Headers headers, JSON json) {
+                    try {
+                        Log.i(TAG, "On Success! Unfavorited: " + json.toString());
+                        Tweet tweet = Tweet.fromJson(json.jsonObject);
+                        // Update the RV with the tweet
+                        // Modify data source of tweets
+                        tweets.set(position, tweet);
+                        // Update the adapter
+                        adapter.notifyItemChanged(position);
+                        scrollListener.resetState();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                    Log.e(TAG, "Unfavorite tweet post error: " + response);
+                }
+            });
+        }
     }
 
     @Override
     public void onRetweet(int position) {
-        client.retweetPost(tweets.get(position).statusId, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Headers headers, JSON json) {
-                try {
-                    Tweet tweet = Tweet.fromJson(json.jsonObject);
-                    // Update the RV with the tweet
-                    // Modify data source of tweets
-                    tweets.add(0, tweet);
-                    // Update the adapter
-                    adapter.notifyItemInserted(0);
-                    scrollListener.resetState();
-                    rvTweets.smoothScrollToPosition(0);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        if(!tweets.get(position).retweeted) {
+            client.retweetPost(tweets.get(position).statusId, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Headers headers, JSON json) {
+                    try {
+                        Tweet tweet = Tweet.fromJson(json.jsonObject);
+                        // Update the RV with the tweet
+                        // Modify data source of tweets
+                        tweets.add(0, tweet);
+                        // Update the adapter
+                        adapter.notifyItemInserted(0);
+                        scrollListener.resetState();
+                        rvTweets.smoothScrollToPosition(0);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                Log.e(TAG, "Retweet post error: " + response);
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                    Log.e(TAG, "Retweet post error: " + response);
+                }
+            });
+        }
     }
 
     public void fetchTimelineAsync(int page) {
