@@ -51,8 +51,6 @@ public class DetailsActivity extends AppCompatActivity {
 
         ivProfileImage = findViewById(R.id.ivProfileImage);
         ivImgMedia = findViewById(R.id.ivImgMedia);
-        ivReplyTo = findViewById(R.id.ivReplyTo);
-        ivRetweet = findViewById(R.id.ivRetweet);
 
         tvName = findViewById(R.id.tvName);
         tvScreenName = findViewById(R.id.tvScreenName);
@@ -118,19 +116,5 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
-
-        ivReplyTo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        ivRetweet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
 }
