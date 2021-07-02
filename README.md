@@ -2,7 +2,7 @@
 
 **Simple Twitter** is an android app that allows a user to view their Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
 
-Time spent: **9.5** hours spent in total
+Time spent: **19.5** hours spent in total
 
 ## User Stories
 
@@ -46,13 +46,13 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/pbluc/Simple-Twitter/blob/1c0a7a4556c11d3a576b65ee9ed0651c302858f1/app/src/main/res/screenshots/Simple%20Twitter%20Video%20GIF%20Walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [Kap](https://getkap.co/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+Formatting the correct Twitter API requests in order to do certain actions (e.g. favorite, retweet) proved to be difficult at first to understand. Additionally. getting the infinite scoller/pagination to function properly with the pull down refresh was something I had to work out more than the other parts of my code. Lastly, I found it harder to keep track of my code as I kept adding and expanding thus making it a little more of a process when going back and reviewing my code.
 
 ## Open-source libraries used
 
